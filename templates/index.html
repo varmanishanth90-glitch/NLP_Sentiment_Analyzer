@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Analyzer</title>
+</head>
+<body>
+    <h2>Enter a Review:</h2>
+    <form method="POST">
+        <textarea name="review" rows="5" cols="50"></textarea><br>
+        <button type="submit">Analyze</button>
+    </form>
+    {% if result %}
+        <h3>Sentiment: {{ result }}</h3>
+    {% endif %}
+</body>
+</html>
