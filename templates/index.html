@@ -2,15 +2,65 @@
 <html>
 <head>
     <title>Sentiment Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 400px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            resize: none;
+            font-size: 14px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        h3 {
+            margin-top: 20px;
+            color: #444;
+        }
+    </style>
 </head>
 <body>
-    <h2>Enter a Review:</h2>
-    <form method="POST">
-        <textarea name="review" rows="5" cols="50"></textarea><br>
-        <button type="submit">Analyze</button>
-    </form>
-    {% if result %}
-        <h3>Sentiment: {{ result }}</h3>
-    {% endif %}
+    <div class="container">
+        <h2>🧠 Sentiment Analyzer</h2>
+        <form method="POST">
+            <textarea name="review" rows="5" placeholder="Type your review here..."></textarea><br>
+            <button type="submit">Analyze</button>
+        </form>
+        {% if result %}
+            <h3>Sentiment: {{ result }}</h3>
+        {% endif %}
+    </div>
 </body>
 </html>
