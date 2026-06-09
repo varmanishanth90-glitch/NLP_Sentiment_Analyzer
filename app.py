@@ -23,7 +23,7 @@ data['cleaned'] = data['review'].apply(preprocess)
 
 # Feature extraction
 vectorizer = TfidfVectorizer(max_features=5000)
-X = vectorizer.fit_transform(data['cleaned']).toarray()
+X = vectorizer.fit_transform(data['cleaned'])
 y = data['sentiment'].map({'positive':1, 'negative':0})
 
 # Train model
