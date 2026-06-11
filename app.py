@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import re
 from nltk.corpus import stopwords
@@ -24,10 +25,12 @@ data['cleaned'] = data['review'].apply(preprocess)
 # Feature extraction
 vectorizer = TfidfVectorizer(max_features=5000)
 X = vectorizer.fit_transform(data['cleaned'])
-y = data['sentiment'].map({'positive':1, 'negative':0})
+y = data['sentiment'].map({'positive': 1, 'negative': 0})
 
 # Train model
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 model = LogisticRegression()
 model.fit(X_train, y_train)
 
@@ -46,4 +49,6 @@ def home():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # IMPORTANT: Bind to PORT Render provides
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
