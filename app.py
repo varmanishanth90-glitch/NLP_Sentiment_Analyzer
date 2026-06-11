@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import re
+import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -8,11 +9,14 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from flask import Flask, request, render_template
 
-# Load dataset
-data = pd.read_csv("IMDB Dataset.csv")  # columns: review, sentiment
+# Ensure stopwords are available
+try:
+    stop_words = set(stopwords.words('english'))
+except LookupError:
+    nltk.download('stopwords')
+    stop_words = set(stopwords.words('english'))
 
 ps = PorterStemmer()
-stop_words = set(stopwords.words('english'))
 
 def preprocess(text):
     text = re.sub('[^a-zA-Z]', ' ', text)
@@ -20,6 +24,8 @@ def preprocess(text):
     text = [ps.stem(word) for word in text if word not in stop_words]
     return ' '.join(text)
 
+# Load dataset
+data = pd.read_csv("IMDB Dataset.csv")  # columns: review, sentiment
 data['cleaned'] = data['review'].apply(preprocess)
 
 # Feature extraction
