@@ -43,26 +43,57 @@ model.fit(X_train, y_train)
 # Flask app
 app = Flask(__name__)
 
+# Landing page
 @app.route("/", methods=["GET"])
-def home():
-    # Just show the form initially
+def landing():
+    return render_template("home.html")
+
+# Sentiment Analyzer
+@app.route("/index", methods=["GET", "POST"])
+def sentiment_analyzer():
+    if request.method == "POST":
+        review = request.form["review"]
+        cleaned = preprocess(review)
+        vectorized = vectorizer.transform([cleaned]).toarray()
+        prediction = model.predict(vectorized)[0]
+
+        if prediction == 1:
+            sentiment = "Positive 😊"
+        elif prediction == 0:
+            sentiment = "Negative 😞"
+        else:
+            sentiment = "Neutral 😐"
+
+        return render_template("index.html", sentiment=sentiment)
     return render_template("index.html")
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    review = request.form["review"]
-    cleaned = preprocess(review)
-    vectorized = vectorizer.transform([cleaned]).toarray()
-    prediction = model.predict(vectorized)[0]
+# Text Summarizer
+def summarize(text, num_sentences=3):
+    from nltk.tokenize import sent_tokenize, word_tokenize
+    nltk.download('punkt', quiet=True)
+    words = word_tokenize(text.lower())
+    freq = {}
+    for word in words:
+        if word.isalpha() and word not in stop_words:
+            freq[word] = freq.get(word, 0) + 1
 
-    if prediction == 1:
-        sentiment = "Positive 😊"
-    elif prediction == 0:
-        sentiment = "Negative 😞"
-    else:
-        sentiment = "Neutral 😐"
+    sentences = sent_tokenize(text)
+    scores = {}
+    for sent in sentences:
+        for word in word_tokenize(sent.lower()):
+            if word in freq:
+                scores[sent] = scores.get(sent, 0) + freq[word]
 
-    return render_template("index.html", sentiment=sentiment)
+    ranked = sorted(scores, key=scores.get, reverse=True)
+    return ' '.join(ranked[:num_sentences])
+
+@app.route("/summarize", methods=["GET", "POST"])
+def summarize_text():
+    if request.method == "POST":
+        text = request.form["text"]
+        summary = summarize(text)
+        return render_template("summarize.html", summary=summary)
+    return render_template("summarize.html")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

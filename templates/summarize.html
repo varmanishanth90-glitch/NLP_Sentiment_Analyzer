@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sentiment Analyzer</title>
+    <title>Text Summarizer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-align: center;
-            width: 420px;
+            width: 500px;
         }
         h2 {
             color: #333;
@@ -51,9 +51,9 @@
             color: #444;
         }
         .result {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
             margin-top: 15px;
+            text-align: left;
         }
         .back-home {
             display: inline-block;
@@ -73,13 +73,14 @@
 </head>
 <body>
     <div class="container">
-        <h2>🧠 Sentiment Analyzer</h2>
-        <form method="POST" action="/sentiment">
-            <textarea name="review" rows="5" placeholder="Type your review here..."></textarea><br>
-            <button type="submit">Analyze</button>
+        <h2>📄 Text Summarizer</h2>
+        <form method="POST" action="/summarize">
+            <textarea name="text" rows="8" placeholder="Paste your text here..."></textarea><br>
+            <button type="submit">Summarize</button>
         </form>
-        {% if sentiment %}
-            <div class="result">Sentiment: {{ sentiment }}</div>
+        {% if summary %}
+            <h3>Summary:</h3>
+            <div class="result">{{ summary }}</div>
         {% endif %}
         <a href="/" class="back-home">← Back to Home</a>
     </div>
