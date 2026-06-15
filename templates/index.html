@@ -18,7 +18,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-align: center;
-            width: 400px;
+            width: 420px;
         }
         h2 {
             color: #333;
@@ -41,6 +41,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            transition: background 0.3s ease;
         }
         button:hover {
             background: #0056b3;
@@ -49,17 +50,22 @@
             margin-top: 20px;
             color: #444;
         }
+        .result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>🧠 Sentiment Analyzer</h2>
-        <form method="POST">
+        <form method="POST" action="/predict">
             <textarea name="review" rows="5" placeholder="Type your review here..."></textarea><br>
             <button type="submit">Analyze</button>
         </form>
-        {% if result %}
-            <h3>Sentiment: {{ result }}</h3>
+        {% if sentiment %}
+            <div class="result">Sentiment: {{ sentiment }}</div>
         {% endif %}
     </div>
 </body>
