@@ -3,7 +3,7 @@ pandas
 nltk
 scikit-learn
 numpy
-gunicorn
-python-dotenv
 flask
 pandas
+gunicorn==22.0.0
+python-dotenv==1.0.1

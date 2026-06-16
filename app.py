@@ -9,12 +9,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from flask import Flask, request, render_template
 
-# Ensure stopwords are available
+# Ensure NLTK resources are available
 try:
     stop_words = set(stopwords.words('english'))
 except LookupError:
     nltk.download('stopwords')
     stop_words = set(stopwords.words('english'))
+
+# Download punkt once at startup
+nltk.download('punkt', quiet=True)
 
 ps = PorterStemmer()
 
@@ -52,7 +55,9 @@ def landing():
 @app.route("/index", methods=["GET", "POST"])
 def sentiment_analyzer():
     if request.method == "POST":
-        review = request.form["review"]
+        review = request.form.get("review", "")
+        if not review.strip():
+            return render_template("index.html", sentiment="⚠️ Please enter text")
         cleaned = preprocess(review)
         vectorized = vectorizer.transform([cleaned]).toarray()
         prediction = model.predict(vectorized)[0]
@@ -70,7 +75,6 @@ def sentiment_analyzer():
 # Text Summarizer
 def summarize(text, num_sentences=3):
     from nltk.tokenize import sent_tokenize, word_tokenize
-    nltk.download('punkt', quiet=True)
     words = word_tokenize(text.lower())
     freq = {}
     for word in words:
@@ -85,12 +89,14 @@ def summarize(text, num_sentences=3):
                 scores[sent] = scores.get(sent, 0) + freq[word]
 
     ranked = sorted(scores, key=scores.get, reverse=True)
-    return ' '.join(ranked[:num_sentences])
+    return ' '.join(ranked[:num_sentences]) if ranked else "⚠️ No summary generated"
 
 @app.route("/summarize", methods=["GET", "POST"])
 def summarize_text():
     if request.method == "POST":
-        text = request.form["text"]
+        text = request.form.get("text", "")
+        if not text.strip():
+            return render_template("summarize.html", summary="⚠️ Please enter text")
         summary = summarize(text)
         return render_template("summarize.html", summary=summary)
     return render_template("summarize.html")
